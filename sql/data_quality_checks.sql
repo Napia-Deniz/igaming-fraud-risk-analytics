@@ -14,23 +14,56 @@ HAVING COUNT(*) > 1;
 GO
 
 
-/* Validate that calculated NGR matches GGR minus bonus cost. */
+/* Validate that calculated NGR matches the defined business formula. */
 SELECT TOP (100)
     k.date_key,
     k.country_id,
     k.ggr_gel,
     k.bonus_cost_gel,
+    k.payment_fee_gel,
+    k.provider_cost_gel,
+    k.gaming_tax_gel,
+    k.chargeback_cost_gel,
     k.ngr_gel,
-    k.ggr_gel - k.bonus_cost_gel AS recalculated_ngr_gel,
-    k.ngr_gel - (k.ggr_gel - k.bonus_cost_gel) AS ngr_difference
+    k.ggr_gel
+        - k.bonus_cost_gel
+        - k.payment_fee_gel
+        - k.provider_cost_gel
+        - k.gaming_tax_gel
+        - k.chargeback_cost_gel AS recalculated_ngr_gel,
+    k.ngr_gel -
+    (
+        k.ggr_gel
+        - k.bonus_cost_gel
+        - k.payment_fee_gel
+        - k.provider_cost_gel
+        - k.gaming_tax_gel
+        - k.chargeback_cost_gel
+    ) AS ngr_difference
 FROM dbo.fact_daily_business_kpi k
 WHERE ABS
 (
-    k.ngr_gel - (k.ggr_gel - k.bonus_cost_gel)
+    k.ngr_gel -
+    (
+        k.ggr_gel
+        - k.bonus_cost_gel
+        - k.payment_fee_gel
+        - k.provider_cost_gel
+        - k.gaming_tax_gel
+        - k.chargeback_cost_gel
+    )
 ) > 0.01
 ORDER BY ABS
 (
-    k.ngr_gel - (k.ggr_gel - k.bonus_cost_gel)
+    k.ngr_gel -
+    (
+        k.ggr_gel
+        - k.bonus_cost_gel
+        - k.payment_fee_gel
+        - k.provider_cost_gel
+        - k.gaming_tax_gel
+        - k.chargeback_cost_gel
+    )
 ) DESC;
 GO
 
