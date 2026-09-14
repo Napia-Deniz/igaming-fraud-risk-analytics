@@ -1,8 +1,7 @@
 /*
-    iGamingBI Final Project
-    02_REFRESH_PLAYER_DAILY.sql
+    Player Daily ETL
 
-    Adds the player-date reporting ETL used by Player 360.
+    Builds the player-date reporting layer used by Player 360.
     Grain of dbo.fact_player_daily: one row per active player per date.
 
     NGR:
